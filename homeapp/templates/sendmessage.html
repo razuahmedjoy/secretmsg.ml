@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="container-fluid login-content">
+    <div class="login-box">
+
+        <h3 class="text-white text-center py-2 f-400">Send Message to {{user.username}}</h3>
+        <br>
+
+        <p class="text-white text-justify">{{user.username}} can see your message, not your name <br> say what do you
+            think 😁 </p>
+
+        <form id="sendmsg" class="form-group" action="{% url 'sendmessage' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="userid" hidden value="{{user.id}}">
+            <textarea class="form-control" name="message" placeholder="Leave a message for {{user.username}} here"
+                maxlength="256" rows="6" required></textarea>
+
+            <small class="text-warning">250 charecter limits</small>
+
+
+            <br>
+
+            <input class="btn btn-block btn-color" id="sendbtn" type="submit" value="Send">
+        </form>
+        <p class="text-center text-white">
+            Say what do you think about {{user.username}} anonymously using the form above.. 🥰
+            Thank You!! 😍😊
+        </p>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    let sendmsgform = document.getElementById('sendmsg')
+    sendmsgform.addEventListener("submit", function () {
+        document.getElementById('sendbtn').disabled = true;
+        document.getElementById('sendbtn').value = "Sending.. Please Wait.";
+        document.getElementById('sendbtn').classList.add('sent');
+    });
+
+</script>
+
+
+{% endblock body %}

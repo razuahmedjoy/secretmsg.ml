@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="container-fluid login-content">
+    <div class="login-box">
+
+        <img src="{% static '/images/user.png' %}" class="img-responsive img-fluid" width="80" alt="">
+        <h4 class="text-white text-center py-2">Login to View Your messages</h4>
+        <p class="text-white text-justify">Recieve anonymous compliments from your friends and send anonymous messages
+            to your
+            friends for free.</p>
+
+        <form class="form-group" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <label for="name">Enter username</label>
+            <input class="form-control" type="text" name="username" placeholder="Enter your nick name without space"
+                autocomplete="off">
+            <br>
+            <label for="name">Enter password</label>
+            <input class="form-control" type="password" name="password" placeholder="Enter password" autocomplete="off">
+            <br>
+            <input class="btn btn-block btn-color" type="submit" value="Login">
+        </form>
+
+        <p class="text-center text-white">
+            Don't have any Account? <a href="{% url 'register' %}" class="text-warning text-bold">Create Account Here</a>
+        </p>
+    </div>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+
+{% endfor %}
+
+
+<script type="text/javascript">
+
+    swal("Invalid Credentials", "", "error");
+
+</script>
+{% endif %}
+
+
+{% endblock body %}

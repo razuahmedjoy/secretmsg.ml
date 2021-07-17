@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="container-fluid login-content">
+    <div class="login-box">
+
+        <img src="{% static '/images/user.png' %}" class="img-responsive img-fluid" width="80" alt="">
+        {% if messages %}
+
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+
+
+
+        <h4 class="text-green text-center py-2">{{message}}</h4>
+
+        {% endif %}
+        {% endfor %}
+        <p class="text-center text-white">Now it's your turn to create an account and dare your friends to tell you what
+            they think about you!</p>
+        {%else%}
+
+        {% endif %}
+        <h4 class="text-green text-center py-2 f-400">Register to get your link</h4>
+
+
+        <p class="text-warning">How to Play?</p>
+        <ul>
+            <li class="text-green">Register entering any username and password</li>
+            <li class="text-green">Share Your link on your story or facebook.</li>
+            <li class="text-green">Then Visit your own link yourself to see your messages.</li>
+
+        </ul>
+
+        <form class="form-group" id="register" action="{% url 'register' %}" method="post">
+            {% csrf_token %}
+            <label class="pt-2" for="name">Enter username without any space</label>
+            <input id="username" class="form-control" type="text" name="username"
+                placeholder="your nick name without any space" autocomplete="off" required>
+
+            <br>
+            <label for="name">Enter password</label>
+            <input class="form-control" type="password" name="password" placeholder="Enter password" autocomplete="off"
+                required>
+            <br>
+            <input id="registerbtn" class="btn btn-block btn-color" type="submit" value="Create Account">
+        </form>
+
+        <p class="text-center text-white">
+            Already have an Account? <a href="{% url 'login' %}" class="text-danger text-bold">Login Now</a>
+        </p>
+        <p class="text-white text-center">Recieve anonymous compliments from your friends and send anonymous messages
+            to your
+            friends for free.</p>
+    </div>
+</div>
+
+{% if messages %}
+
+{% for message in messages %}
+{% if message.tags == 'warning' %}
+
+<script type="text/javascript">
+
+    var msg = "{{message}}"
+
+    swal(msg, "", "error");
+
+
+
+</script>
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+<script type="text/javascript">
+
+    let register = document.getElementById('register')
+    register.addEventListener("submit", function () {
+        document.getElementById('registerbtn').value = "Creating .....";
+        document.getElementById('registerbtn').classList.add('sent');
+    });
+
+    document.getElementById('username').addEventListener('keydown', function (e) {
+        let username = document.getElementById('username').value;
+
+        if (e.key === " ") {
+            e.preventDefault();
+
+        }
+
+    })
+
+
+
+
+</script>
+{% endblock body %}

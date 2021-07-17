@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% load static %}
+{% load social_share %}
+{% block body %}
+<div class="container-fluid login-content">
+    <div class="alert alert-warning text-dark alert-dismissible fade show container" role="alert">
+        NOTICE: If you face any problem using this site or if you need any extra feature let us know by<strong> <a
+                href="#" class="text-primary" data-toggle="modal" data-target="#exampleModal">clicking here </a>
+        </strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="login-box">
+        {% if messages %}
+        {% for message in messages %}
+        <p class="text-green text-center">{{message}}</p>
+        {% endfor %}
+
+        {% endif %}
+        <h2 class="text-white text-center py-2 f-400">Your Inbox</h2>
+        <p class="text-center text-warning f-400">Share your profile link to get responses from your friend. 👌</p>
+        <p class="text-center profile-link">{{request.build_absolute_uri}}
+        </p>
+
+        <a id="shared" class="btn btn-primary btn-block"
+            href="https://www.facebook.com/sharer/?u={{ request.build_absolute_uri }}" target="_blank"> <i
+                class="fa fa-facebook px-1 fa-1x"></i> Share
+            on
+            Facebook</a>
+        <br>
+
+
+        <p class="text-white text-justify">Scroll Down 👇👇 to see your messages<br><span class="small text-green">Take
+                screenshot & post reply on your story</span></p>
+
+        <ul class="list-group">
+            {% if inbox %}
+
+
+            {% for msg in inbox %}
+
+
+            <li class="list-item message-item">
+                <h6 class="text-white msg-titl px-2 py-1">Message :</h6>
+                <p class="px-3 text-light">
+                    {{msg.message}}
+                </p>
+                <p class="font-small px-2">-Anonymous [ {{msg.created_at}} ]</p>
+            </li>
+
+
+            {% endfor %}
+
+            {% else %}
+            <p class="text-danger p-3 text-center">
+                There is no message yet
+            </p>
+            {% endif %}
+
+
+        </ul>
+        <p class="text-center text-white py-3">
+            Share your profile link on your facebook story and login after a while to see your secret msgs from your
+            freinds 😍😊
+        </p>
+
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Send message to Website Admin</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" id="adminmsgform" method="post">
+                    {% csrf_token %}
+                    <input class="form-control" type="email" name="email" id="email" placeholder="your email.."
+                        required>
+                    <br>
+                    <textarea class="form-control" id="adminmsg" cols="30" rows="5"
+                        placeholder="Enter your message here.." maxlength="256" required></textarea>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    document.getElementById("shared").addEventListener("click", function () {
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'shared' username=request.user.username %}",
+
+            success: function (response) {
+
+            }
+        });
+
+    })
+
+    $(document).on('submit', '#adminmsgform', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'sendmsgtoadmin' %}",
+            data: {
+                email: $('#email').val(),
+                adminmsg: $('#adminmsg').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (response) {
+                $('#email').val("");
+                $('#adminmsg').val("");
+                swal(response.text, "We will contact soon", "success");
+
+
+            },
+            error: function (response) {
+                swal("Error. Try Later", "", "error");
+            }
+        });
+    })
+
+
+
+</script>
+
+
+
+{% endblock body %}
